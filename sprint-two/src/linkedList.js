@@ -8,7 +8,7 @@ var makeLinkedList = function(){
 	if (!list.head) {
   		list.head = node;
   	}
-  	
+
   	if (list.head === list.tail) {
   		list.head.next = node;
   	}
@@ -17,7 +17,7 @@ var makeLinkedList = function(){
   		list.tail.next = node;
   	}
 
-  	list.tail = node;	
+  	list.tail = node;
   };
 
   list.removeHead = function(){
