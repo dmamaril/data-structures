@@ -15,6 +15,7 @@ describe("tree", function() {
   });
 
   it("should add children to the tree", function() {
+    console.log(tree);
     tree.addChild(5);
     expect(tree.children[0].value).to.equal(5);
   });
