@@ -6,25 +6,32 @@ var Graph = function(){
 // var graph = new Graph ();
 
 Graph.prototype.addNode = function(newNode, toNode){
-
   if (this.nodeCount() === 0){
     this[newNode] = {};
+
   } else if (this.nodeCount()===1){
     var solo = this.soloNode();
-    var temp = {};
-    temp[newNode] = true;
-    $.extend(this[solo], temp);
-    this[newNode] = {};
-    this[newNode][solo] = true;
-  } else {
-    var to = {};
-    to[toNode] = true;
-    var temp = {};
-    temp[newNode] = true;
-    this[newNode] = to;
-    $.extend(this[toNode], temp);
-  }
+    // var temp = {};
+    // temp[newNode] = true;
+    // $.extend(this[solo], temp);
 
+    this[newNode] = {};
+    // this[newNode][solo] = true;
+
+    this.addEdge(solo,newNode);
+
+  } else if (toNode){
+    // var to = {};
+    // to[toNode] = true;
+    this[newNode] = {};
+    this.addEdge(newNode,toNode);
+    // var temp = {};
+    // temp[newNode] = true;
+    // $.extend(this[toNode], temp);
+  } else
+  {
+    this[newNode] = {};
+  }
 };
 
 Graph.prototype.contains = function(node){
@@ -36,7 +43,6 @@ Graph.prototype.removeNode = function(node){
 };
 
 Graph.prototype.getEdge = function(fromNode, toNode){
-  console.log(this);
   return this[fromNode].hasOwnProperty(toNode);
 };
 
@@ -83,3 +89,12 @@ Graph.prototype.soloNode = function () {
     }
   }
 };
+
+Graph.prototype.forEachNode = function (iterator) {
+  for (var key in this) {
+    if (this.hasOwnProperty(key)) {
+      iterator(this[key]);
+    }
+  }
+};
+
