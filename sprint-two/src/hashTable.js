@@ -49,21 +49,17 @@ HashTable.prototype.remove = function(k){
   // If there is an element at index i
   if (this._storage[i]) {
 
-    // If the array has a length of 1 at index i, set to empty array
-    if (this._storage[i].length === 1) {
-      this._storage[i] = [];
-
-    // If the array has a length > than 1 (meaning more than 1 [k,v] pair)
+    // If the array has a length > than 0 (meaning more than 1 [k,v] pair)
     // Search the array for the one that matches k and delete it using splice
-    } else if (this._storage[i].length > 1){
+    if (this._storage[i].length > 0){
       for (var y = 0; y<this._storage[i].length; y++){
         if (this._storage[i][y][0] === k){
           this._storage[i].splice(y,1);
         }
       }
     }
-
   }
+
 
   // Check to see if compression is required. Criteria is that the elements take up less than 25% of current space
   var counted = this.counter();

@@ -67,5 +67,39 @@ var bstMethods = {
     if (this.right !== null){
       this.right.depthFirstLog(iterator);
     }
+  },
+
+  breadthFirstLog: function(queue){
+    //store value in results array
+    var results = [];
+    results.push(this.value);
+
+    //create empty queue if no queue was passed in
+    if (queue === undefined){
+      queue = [];
+    }
+    console.log(results);
+    console.log(queue);
+
+    //check left and right and add to queue if it exists
+    if (this.left){
+      queue.push(this.left);
+    }
+
+    if (this.right){
+      queue.push(this.right);
+    }
+
+    //recurse through the queue array for breadthFirstLog
+    if (queue.length !== 0) {
+      var next = queue[0];
+      queue.shift();
+      results = results.concat(next.breadthFirstLog(queue));
+    } else {
+      return results;
+    }
+
+
+
   }
 };
