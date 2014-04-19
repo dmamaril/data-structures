@@ -7,27 +7,37 @@ var makeTree = function(value){
   return newTree;
 };
 
-// tree = {value: undefined, children: undefined}
 
 
 var treeMethods = {};
 
 treeMethods.addChild = function(value){
+
+  //if there are no children - create an empty array
   if(!this.children) {
     this.children = [];
   }
+
+  //create a new tree node and update parent value
   var child = makeTree(value);
   child.parent = this;
 
+  //move new tree node into the array
   this.children.push(child);
 
 };
 
 treeMethods.contains = function(target){
+
+  // if current value matches target
   if (this.value === target){
     return true;
+
+  // if there are no more children
   } else if (this.children === null){
     return false;
+
+  // there are children so recurse and only return true if found
   } else {
     var kids = this.children;
     for (var i = 0 ; i < kids.length ; i++) {
@@ -35,6 +45,8 @@ treeMethods.contains = function(target){
         return true;
       }
     }
+
+    //return false if all of the recursion did not find target
     return false;
   }
 
@@ -53,7 +65,19 @@ treeMethods.removeFromParent = function(){
   delete this;
 };
 
+treeMethods.traverse = function (iterator){
 
+  //execute callback function on current node value
+  iterator(this.value);
+
+  //if the node has children, then run traverse on each child
+  if(this.children !== null){
+    each(this.children, function (element) {
+      element.traverse(iterator);
+    });
+  }
+
+};
 
 
 var extend = function(obj) {

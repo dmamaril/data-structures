@@ -5,33 +5,37 @@ var HashTable = function(){
 };
 
 HashTable.prototype.insert = function(k, v){
+
+  // Gets Unique index from Hash Function based on limit
   var i = getIndexBelowMaxForKey(k, this._limit);
+
+  // Check to see if there is already an array at index i - if not, add an empty array
   if (Array.isArray(this._storage[i]) === false){
     this._storage[i] = [];
   }
+
+  // Push key value pair into the array at index i
   this._storage[i].push([k, v]);
 
-
+  //Check if expansion is needed. Criteria is that at least 75% of the limit is used
+  //  If so, call the rehash function
   var counted = this.counter();
-  // console.log(counted > this._limit * 0.75);
-  // if (counted === 5){
-  //   debugger;
-  // }
   if (counted > this._limit * 0.75) {
-    // this._limit *= 2;
-    // this.rehash(1);
     this.rehash(this._limit*2);
   }
 };
 
 HashTable.prototype.retrieve = function(k){
+
+  // Gets Unique index from Hash Function based on limit
+
   var i = getIndexBelowMaxForKey(k, this._limit);
-  // storage[i]
-  console.log(this._storage[i]);
+
+  // Go through the storage elemement at index i and look for the key that matched k and return the value;
   if (Array.isArray(this._storage[i])) {
     for (var y = 0; y<this._storage[i].length; y++){
       if (this._storage[i][y][0] === k){
-        return this._storage[i][y][1];
+        return this._storage[i][y][1];    // value is stored at index 1 -- [k,v]
       }
     }
   }
@@ -42,13 +46,15 @@ HashTable.prototype.remove = function(k){
 
   var i = getIndexBelowMaxForKey(k, this._limit);
 
-  // if (this._storage[i] === undefined){
-  //   debugger;
-  // }
-
+  // If there is an element at index i
   if (this._storage[i]) {
+
+    // If the array has a length of 1 at index i, set to empty array
     if (this._storage[i].length === 1) {
       this._storage[i] = [];
+
+    // If the array has a length > than 1 (meaning more than 1 [k,v] pair)
+    // Search the array for the one that matches k and delete it using splice
     } else if (this._storage[i].length > 1){
       for (var y = 0; y<this._storage[i].length; y++){
         if (this._storage[i][y][0] === k){
@@ -59,9 +65,11 @@ HashTable.prototype.remove = function(k){
 
   }
 
-
+  // Check to see if compression is required. Criteria is that the elements take up less than 25% of current space
   var counted = this.counter();
   if (counted < this._limit*0.25){
+
+  // Run rehash function to compress
     this.rehash(this._limit/2);
   }
 
@@ -69,16 +77,14 @@ HashTable.prototype.remove = function(k){
 
 HashTable.prototype.rehash = function(newLimit){
 
-
-    //create new HashTable with the new Limit
-    //loop through current keys and add to new HashTable with inserts
-    //reassign this HashTable to new HashTable
-
+    // Create new HashTable with the new Limit (compression or expansion --- passed in by the insert/remove functions)
     var newHash = new HashTable;
     newHash._limit = newLimit;
 
+    // Variable for loop
     var old = this._storage;
 
+    // Go through all of the elements in the current HashTable object and reinsert into the new HashTable with new Limit
     for (var key in old) {
       if (Array.isArray(old[key])) {
         for (var i = 0 ; i < old[key].length ; i++) {
@@ -86,58 +92,22 @@ HashTable.prototype.rehash = function(newLimit){
         }
       }
     }
-    // console.log(this);
-    // console.log(newHash);
+
+    // Reassign the current limit to new Limit and reassign the current storage object to the new storage Object
     this._limit = newLimit;
     this._storage = newHash._storage;
-    // console.log(this);
-
-    // newHash._storage[]
-
-
-
-
-    // var limitInsert, limitRemove;
-
-    // if (toggle){
-    //   limitInsert = this._limit;
-    //   limitRemove = this._limit/2;
-    // } else {
-    //   limitInsert = this._limit;
-    //   limitRemove = this._limit*2;
-    // }
-
-    // // console.log(this._storage);
-
-    // var k, v;
-
-
-    // for (var key in this._storage){
-    //   if(this._storage.hasOwnProperty(key)){
-    //     if(this._storage[key].length >=1){
-    //       for (var i =0; i<this._storage[key].length; i++){
-    //           for (var j = 0; j<this._storage[key][i]; j++){
-    //             console.log(this._storage[key][i].length);
-    //             k = this._storage[key][i][j][0];
-    //             v = this._storage[key][i][j][0];
-    //             this.remove(k,limitRemove);
-    //             this.insert(k,v, limitInsert);
-    //           }
-    //       }
-    //     }
-    //   }
-    // }
-
 
 };
 
 HashTable.prototype.counter = function () {
+
+  // Count the number of key value pairs in the storage element
+
   var count = 0;
   for (var key in this._storage) {
     if (Array.isArray(this._storage[key])) {
       count = count + this._storage[key].length;
     }
   }
-  // console.log(count);
   return count;
 };
