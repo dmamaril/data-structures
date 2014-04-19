@@ -70,6 +70,8 @@ var bstMethods = {
   },
 
   breadthFirstLog: function(queue){
+
+    // debugger;
     //store value in results array
     var results = [];
     results.push(this.value);
@@ -78,8 +80,8 @@ var bstMethods = {
     if (queue === undefined){
       queue = [];
     }
-    console.log(results);
-    console.log(queue);
+    // console.log(results);
+    // console.log(queue);
 
     //check left and right and add to queue if it exists
     if (this.left){
@@ -94,7 +96,7 @@ var bstMethods = {
     if (queue.length !== 0) {
       var next = queue[0];
       queue.shift();
-      results = results.concat(next.breadthFirstLog(queue));
+      return results = results.concat(next.breadthFirstLog(queue));
     } else {
       return results;
     }
